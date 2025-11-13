@@ -4,146 +4,126 @@
 <meta charset="UTF-8">
 <title>Servicio de Convocatoria - Premios Vásquez</title>
 <style>
-  body {
-    background-color: black;
-    color: white;
-    font-family: monospace;
-    text-align: center;
-    padding-top: 5%;
-  }
+  body {
+    background-color: black;
+    color: white;
+    font-family: monospace;
+    text-align: center;
+    padding-top: 5%;
+  }
 
-  img {
-    width: 200px;
-    /* Agregamos cursor pointer para indicar que es clickeable */
-    cursor: pointer;
-    margin-top: 20px;
-  }
+  img {
+    width: 200px;
+    margin-top: 20px;
+  }
 
-  p {
-    font-size: 14px;
-    color: #aaa;
-  }
+  p {
+    font-size: 14px;
+    color: #aaa;
+  }
 
-  .keypad {
-    display: grid;
-    grid-template-columns: repeat(3, 60px);
-    gap: 10px;
-    justify-content: center;
-    margin-top: 20px;
-  }
+  .keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+  }
 
-  button {
-    background: none;
-    border: 1px solid #555;
-    color: white;
-    font-size: 18px;
-    padding: 10px;
-    cursor: pointer;
-    transition: 0.2s;
-  }
+  button {
+    background: none;
+    border: 1px solid #555;
+    color: white;
+    font-size: 18px;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
 
-  button:hover {
-    border-color: limegreen;
-    color: limegreen;
-  }
+  button:hover {
+    border-color: limegreen;
+    color: limegreen;
+  }
 
-  button:active {
-    background: limegreen;
-    color: black;
-  }
+  button:active {
+    background: limegreen;
+    color: black;
+  }
 </style>
 </head>
 <body>
-  <h2>El teléfono está en espera</h2>
-    <img src="nokia.png" alt="Teléfono Nokia" onclick="iniciarLlamada()">
-  <p>Presione un número para continuar.</p>
+  <h2>El teléfono está en espera</h2>
+  <img src="nokia.png" alt="Teléfono Nokia">
+  <p>Presione un número para continuar.</p>
 
-  <div class="keypad">
-    <button onclick="mark(1)">1</button>
-    <button onclick="mark(2)">2</button>
-    <button onclick="mark(3)">3</button>
-    <button onclick="mark(0)">0</button>
-  </div>
+  <div class="keypad">
+    <button onclick="mark(1)">1</button>
+    <button onclick="mark(2)">2</button>
+    <button onclick="mark(3)">3</button>
+    <button onclick="mark(0)">0</button>
+  </div>
 
-  <audio id="audioPlayer" preload="auto"></audio>
+  <audio id="audioPlayer" preload="auto"></audio>
 
-  <script>
-    const player = document.getElementById('audioPlayer');
-    // Flag para saber si ya se inició la llamada
-    let llamadaIniciada = false;
+  <script>
+    const player = document.getElementById('audioPlayer');
 
-    const audios = {
-      inicio: 'inicio.mp3',
-      memoria: 'memoria.mp3',
-      territorio: 'territorio.mp3',
-      identidad: 'identidad.mp3',
-      error: 'error.mp3',
-      humano: 'humano.mp3',
-      cierre: 'cierre.mp3'
-    };
-
-    // Función para manejar el inicio de la llamada (reproducción del intro)
-    function iniciarLlamada() {
-        if (llamadaIniciada) return; // Evita que se reproduzca varias veces
-
-        player.src = audios.inicio;
-        player.play();
-        llamadaIniciada = true;
-
-        // Si no se presiona nada después del intro → cierre (Tu lógica original)
-        setTimeout(() => {
-          if (player.src.includes(audios.inicio)) {
-            player.src = audios.cierre;
-            player.play();
-          }
-        }, 20000); // 20 segundos
-    }
-
-    // Al cargar la ventana, solo establecemos el audio inicial si queremos precargarlo,
-    // pero la reproducción queda en 'iniciarLlamada'
-    window.onload = () => {
-        // Opcional: Cambiar el cursor del párrafo de instrucciones
-        document.querySelector('p').innerHTML = 'Haga clic en el teléfono para iniciar la llamada.';
+    const audios = {
+      inicio: 'intro.mp3',
+      memoria: 'memoria.mp3',
+      territorio: 'territorio.mp3',
+      identidad: 'identidad.mp3',
+      error: 'error.mp3',
+      humano: 'humano.mp3',
+      cierre: 'cierre.mp3'
     };
 
-    function mark(num) {
-        // Aseguramos que la llamada se haya iniciado antes de procesar las marcas
-        if (!llamadaIniciada) {
-            iniciarLlamada();
+    window.onload = () => {
+      player.src = audios.inicio;
+      player.play();
+
+      // Si no se presiona nada después del intro → cierre
+      setTimeout(() => {
+        if (player.src.includes(audios.inicio)) {
+          player.src = audios.cierre;
+          player.play();
         }
+      }, 20000);
+    };
 
-      if (num === 1) {
-        sequence(audios.memoria);
-      } else if (num === 2) {
-        sequence(audios.territorio);
-      } else if (num === 3) {
-        sequence(audios.identidad);
-      } else if (num === 0) {
-        playHuman();
-      } else {
-        sequence(audios.error);
-      }
-    }
+    function mark(num) {
+      if (num === 1) {
+        sequence(audios.memoria);
+      } else if (num === 2) {
+        sequence(audios.territorio);
+      } else if (num === 3) {
+        sequence(audios.identidad);
+      } else if (num === 0) {
+        playHuman();
+      } else {
+        sequence(audios.error);
+      }
+    }
 
-    document.addEventListener('keydown', (event) => {
-      if (['0', '1', '2', '3'].includes(event.key)) {
-        mark(parseInt(event.key));
-      }
-    });
+    document.addEventListener('keydown', (event) => {
+      if (['0', '1', '2', '3'].includes(event.key)) {
+        mark(parseInt(event.key));
+      }
+    });
 
-    function sequence(audioName) {
-      player.src = audioName;
-      player.play();
-      setTimeout(() => {
-        player.src = audios.error;
-        player.play();
-      }, 5000); // Recordatorio: ajusta este tiempo (5000ms) a la duración real de tus audios
-    }
+    function sequence(audioName) {
+      player.src = audioName;
+      player.play();
+      setTimeout(() => {
+        player.src = audios.error;
+        player.play();
+      }, 5000); // cambia según duración de tus audios
+    }
 
-    function playHuman() {
-      player.src = audios.humano;
-      player.play();
-    }
-  </script>
+    function playHuman() {
+      player.src = audios.humano;
+      player.play();
+    }
+  </script>
 </body>
 </html>
