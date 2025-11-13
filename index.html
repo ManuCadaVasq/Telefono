@@ -79,3 +79,47 @@
       cierre: 'cierre.mp3'
     };
 
+    // Reproducir intro al cargar
+    window.onload = () => {
+      player.src = audios.inicio;
+      player.play();
+
+      setTimeout(() => {
+        if (player.src.includes(audios.inicio)) {
+          player.src = audios.cierre;
+          player.play();
+        }
+      }, 20000);
+    };
+
+    // Función que se activa al tocar la imagen
+    function playIntro() {
+      player.pause();           // detiene cualquier audio que esté sonando
+      player.currentTime = 0;   // vuelve al inicio
+      player.src = audios.inicio;
+      player.play();
+    }
+
+    function mark(num) {
+      if (num === 1) {
+        sequence(audios.memoria);
+      } else if (num === 2) {
+        sequence(audios.territorio);
+      } else if (num === 3) {
+        sequence(audios.identidad);
+      } else if (num === 0) {
+        playHuman();
+      } else {
+        sequence(audios.error);
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (['0', '1', '2', '3'].includes(event.key)) {
+        mark(parseInt(event.key));
+      }
+    });
+
+    function sequence(audioName) {
+      player.src = audioName;
+
