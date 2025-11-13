@@ -79,23 +79,10 @@
       cierre: 'cierre.mp3'
     };
 
-    // Reproducir intro al cargar
-    window.onload = () => {
-      player.src = audios.inicio;
-      player.play();
-
-      setTimeout(() => {
-        if (player.src.includes(audios.inicio)) {
-          player.src = audios.cierre;
-          player.play();
-        }
-      }, 20000);
-    };
-
     // Función que se activa al tocar la imagen
     function playIntro() {
-      player.pause();           // detiene cualquier audio que esté sonando
-      player.currentTime = 0;   // vuelve al inicio
+      player.pause();
+      player.currentTime = 0;
       player.src = audios.inicio;
       player.play();
     }
@@ -115,11 +102,26 @@
     }
 
     document.addEventListener('keydown', (event) => {
-      if (['0', '1', '2', '3'].includes(event.key)) {
+      if (['0','1','2','3'].includes(event.key)) {
         mark(parseInt(event.key));
       }
     });
 
     function sequence(audioName) {
       player.src = audioName;
+      player.play();
+      setTimeout(() => {
+        player.src = audios.error;
+        player.play();
+      }, 5000);
+    }
+
+    function playHuman() {
+      player.src = audios.humano;
+      player.play();
+    }
+  </script>
+</body>
+</html>
+
 
