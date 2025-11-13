@@ -87,6 +87,15 @@
       player.play();
     }
 
+    // Al terminar un audio
+    player.addEventListener('ended', () => {
+      // Si terminó el intro, reproducir cierre
+      if (player.src.includes('inicio.mp3')) {
+        player.src = audios.cierre;
+        player.play();
+      }
+    });
+
     function mark(num) {
       if (num === 1) {
         sequence(audios.memoria);
